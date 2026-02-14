@@ -1,54 +1,57 @@
-# Portfolio Tracker Skill
+---
+name: crypto-portfolio-tracker-api
+description: Track cryptocurrency portfolios with real-time prices, P&L calculations, and allocation analysis. Query Bitcoin, Ethereum, Solana and 10,000+ token holdings.
+---
 
-Track crypto portfolio value, P&L, and allocation using Strykr Prism API.
+# Crypto Portfolio Tracker API
 
-## When to Use
+Track cryptocurrency portfolios with real-time prices and P&L calculations.
 
-- User asks about their crypto holdings value
-- User wants to check portfolio P&L
-- User needs current prices for multiple tokens
-- User wants allocation breakdown
+## Installation
+
+```bash
+npm install crypto-portfolio-tracker-api
+```
 
 ## Usage
 
-### Quick Price Check
 ```javascript
-const { getPrice } = require('@strykr/portfolio-tracker');
-const btc = await getPrice('BTC');
-console.log(`BTC: $${btc.price}`);
+const { PortfolioTracker } = require('crypto-portfolio-tracker-api');
+
+const tracker = new PortfolioTracker();
+
+// Get current price
+const btc = await tracker.getPrice('BTC');
+
+// Get multiple prices
+const prices = await tracker.getPrices(['BTC', 'ETH', 'SOL']);
+
+// Track portfolio with P&L
+const portfolio = await tracker.trackPortfolio([
+  { symbol: 'BTC', amount: 0.5, costBasis: 30000 },
+  { symbol: 'ETH', amount: 10, costBasis: 2000 }
+]);
+
+console.log(`Total: $${portfolio.totalValue}`);
+console.log(`P&L: $${portfolio.totalPnL}`);
 ```
 
-### Track Portfolio
-```javascript
-const { PortfolioTracker } = require('@strykr/portfolio-tracker');
+## CLI
 
-const portfolio = new PortfolioTracker();
-portfolio.addHolding('BTC', 1.5, 45000);  // symbol, amount, cost basis
-portfolio.addHolding('ETH', 10);
-
-const valuation = await portfolio.getValuation();
-// Returns total value, P&L, allocation per asset
-```
-
-### CLI
 ```bash
-portfolio price BTC
-portfolio track BTC:1.5 ETH:10 SOL:100
+# Get price
+npx crypto-portfolio-tracker-api price BTC
+
+# Track portfolio from file
+npx crypto-portfolio-tracker-api track portfolio.json
 ```
 
-## API Endpoints Used
+## API Methods
 
-- `GET /crypto/price/{symbol}` - Single price
-- `GET /batch/crypto/prices?symbols=X,Y,Z` - Batch prices
+- `getPrice(symbol)` - Get single token price
+- `getPrices(symbols)` - Get multiple prices
+- `trackPortfolio(holdings)` - Calculate portfolio value and P&L
 
-## Notes
+## Data Source
 
-- No API key required for basic usage
-- Prices are real-time from Prism API
-- Supports 10,000+ tokens across all chains
-
-## Source
-
-- NPM: `npm install @strykr/portfolio-tracker`
-- GitHub: https://github.com/Strykr-Ai/portfolio-tracker
-- API: https://prismapi.ai
+Powered by [PRISM API](https://prismapi.ai)
