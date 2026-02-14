@@ -1,141 +1,74 @@
-# @strykr/portfolio-tracker
+# crypto-portfolio-tracker-api
 
-Real-time crypto portfolio tracker powered by [Strykr Prism API](https://prismapi.ai). Track holdings, P&L, and allocation across Bitcoin, Ethereum, Solana, and 10,000+ tokens.
+Real-time cryptocurrency portfolio tracking API. Track your Bitcoin, Ethereum, Solana and 10,000+ token holdings with live prices, profit/loss calculations, and allocation breakdowns.
 
 ## Features
 
-- 📊 **Real-time prices** from Prism API (no API key required)
-- 💰 **Portfolio valuation** with P&L tracking
-- 📈 **24h change** for each holding
-- 🎯 **Allocation percentages** auto-calculated
-- 🖥️ **CLI included** for quick lookups
-- ⚡ **Zero dependencies** - just native fetch
+- **Real-time prices** - Live cryptocurrency prices across all major tokens
+- **Multi-wallet support** - Track multiple wallets and exchanges in one place
+- **P&L calculations** - Automatic profit/loss tracking with cost basis
+- **Allocation analysis** - Portfolio breakdown by asset, chain, and sector
+- **10,000+ tokens** - Bitcoin, Ethereum, Solana, memecoins, DeFi tokens, and more
 
 ## Installation
 
 ```bash
-npm install @strykr/portfolio-tracker
+npm install crypto-portfolio-tracker-api
 ```
 
 ## Quick Start
 
 ```javascript
-const { PortfolioTracker, getPrice } = require('@strykr/portfolio-tracker');
+const { PortfolioTracker } = require('crypto-portfolio-tracker-api');
 
-// Single price lookup
-const btc = await getPrice('BTC');
-console.log(`Bitcoin: $${btc.price}`);
+// Initialize tracker
+const tracker = new PortfolioTracker();
+
+// Get current price
+const btcPrice = await tracker.getPrice('BTC');
+console.log(`Bitcoin: $${btcPrice.price}`);
+
+// Get multiple prices
+const prices = await tracker.getPrices(['BTC', 'ETH', 'SOL']);
 
 // Track a portfolio
-const portfolio = new PortfolioTracker();
-portfolio
-  .addHolding('BTC', 1.5, 45000)  // 1.5 BTC @ $45k cost basis
-  .addHolding('ETH', 10, 2500)    // 10 ETH @ $2.5k cost basis
-  .addHolding('SOL', 100);        // 100 SOL, no cost basis
+const portfolio = await tracker.trackPortfolio([
+  { symbol: 'BTC', amount: 0.5, costBasis: 30000 },
+  { symbol: 'ETH', amount: 10, costBasis: 2000 },
+  { symbol: 'SOL', amount: 100, costBasis: 25 }
+]);
 
-const valuation = await portfolio.getValuation();
-console.log(`Total: $${valuation.totalValue.toLocaleString()}`);
-console.log(`P&L: $${valuation.totalPnl.toLocaleString()}`);
+console.log(`Total Value: $${portfolio.totalValue}`);
+console.log(`Total P&L: $${portfolio.totalPnL} (${portfolio.pnlPercent}%)`);
 ```
 
 ## CLI Usage
 
 ```bash
-# Get current price
-portfolio price BTC
-portfolio price ETH
+# Get single price
+npx crypto-portfolio-tracker-api price BTC
 
-# Track portfolio value
-portfolio track BTC:1.5 ETH:10 SOL:100
+# Get multiple prices
+npx crypto-portfolio-tracker-api prices BTC,ETH,SOL
+
+# Track portfolio from JSON file
+npx crypto-portfolio-tracker-api track portfolio.json
 ```
 
 ## API Reference
 
-### `PortfolioTracker`
-
-```javascript
-const tracker = new PortfolioTracker({ apiKey: 'optional' });
-
-// Add holdings
-tracker.addHolding(symbol, amount, costBasis?)
-
-// Remove holdings
-tracker.removeHolding(symbol, amount?)
-
-// Get valuation
-const result = await tracker.getValuation();
-// Returns: { totalValue, totalPnl, holdings: [...] }
-
-// Serialize
-const json = tracker.toJSON();
-const restored = PortfolioTracker.fromJSON(json);
-```
-
 ### `getPrice(symbol)`
-
-Quick lookup for a single token.
-
-```javascript
-const { getPrice } = require('@strykr/portfolio-tracker');
-const data = await getPrice('BTC');
-// { price: 67500, change_24h: 2.5, ... }
-```
+Get real-time price for a single cryptocurrency.
 
 ### `getPrices(symbols)`
+Get prices for multiple cryptocurrencies in one call.
 
-Batch lookup for multiple tokens.
+### `trackPortfolio(holdings)`
+Calculate portfolio value, P&L, and allocation from holdings array.
 
-```javascript
-const { getPrices } = require('@strykr/portfolio-tracker');
-const prices = await getPrices(['BTC', 'ETH', 'SOL']);
-```
+## Data Sources
 
-## Response Format
-
-```javascript
-{
-  totalValue: 125000,
-  totalCost: 100000,
-  totalPnl: 25000,
-  totalPnlPercent: 25,
-  holdings: [
-    {
-      symbol: 'BTC',
-      amount: 1.5,
-      price: 67500,
-      value: 101250,
-      costBasis: 45000,
-      pnl: 33750,
-      pnlPercent: 50,
-      allocation: 81,
-      change24h: 2.5
-    },
-    // ...
-  ],
-  timestamp: '2024-02-14T10:30:00.000Z'
-}
-```
-
-## Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `PRISM_API_KEY` | Optional API key for higher rate limits |
-
-## Supported Assets
-
-- **Crypto**: BTC, ETH, SOL, and 10,000+ tokens across all major chains
-- **DeFi**: LP tokens, staked positions, wrapped assets
-- **Real-time**: Prices update every few seconds
-
-## Powered by Strykr Prism
-
-[Prism API](https://prismapi.ai) provides unified financial data for AI agents and developers:
-- Crypto prices across 50+ chains
-- Stock quotes and fundamentals
-- DeFi protocols and yields
-- Prediction markets
-- Sports betting odds
+Powered by [PRISM API](https://prismapi.ai) - unified financial data across crypto, DeFi, and traditional markets.
 
 ## License
 
