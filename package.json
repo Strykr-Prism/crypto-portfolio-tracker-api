@@ -1,0 +1,43 @@
+{
+  "name": "@strykr/portfolio-tracker",
+  "version": "1.0.0",
+  "description": "Real-time crypto portfolio tracker powered by Strykr Prism API. Track holdings, P&L, and allocation across Bitcoin, Ethereum, Solana and 10,000+ tokens.",
+  "main": "src/index.js",
+  "bin": {
+    "portfolio": "./cli.js"
+  },
+  "scripts": {
+    "test": "node examples/basic.js"
+  },
+  "keywords": [
+    "crypto",
+    "portfolio",
+    "tracker",
+    "bitcoin",
+    "ethereum",
+    "solana",
+    "trading",
+    "strykr",
+    "prism",
+    "api",
+    "defi",
+    "web3",
+    "prices",
+    "holdings",
+    "pnl",
+    "profit-loss"
+  ],
+  "author": "Strykr <dev@strykr.ai>",
+  "license": "MIT",
+  "homepage": "https://github.com/Strykr-Ai/portfolio-tracker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Strykr-Ai/portfolio-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Strykr-Ai/portfolio-tracker/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
